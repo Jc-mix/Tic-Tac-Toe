@@ -7,52 +7,64 @@
 ![](https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522685106&di=ac208ab5ad89f5f0518663e7f35a0adb&imgtype=jpg&er=1&src=http%3A%2F%2Fimg.bitscn.com%2Fupimg%2Fallimg%2Fc141118%2F1416321061C1Z-25594.jpg)
 
 **编写一个代码，使用 debug 语句来验证 MonoBehaviour 基本行为或事件触发的条件**
+
+
   
   1.基本行为包括 Awake() Start() Update() FixedUpdate() LateUpdate()
   
   答：
   
-  ```
-  void Awake () {  
-        Debug.Log("Awake");  
-        enabled = false;  
-    } 
+```C# 
+  void Awake () {  
+	Debug.Log("Awake");  
+	enabled = false;  
+   } 
     //初始化函数，在游戏开始时系统自动调用。一般用来创建变量之类的东西。 
-  ```
-  ```
-  void Start () {  
-        Debug.Log("Start");  
-    }
+
+   void Start () {  
+	Debug.Log("Start");  
+   }
     //初始化函数，在所有Awake函数运行完之后（一般是这样，但不一定），在所有Update函数前系统自动调用。一般用来给变量赋值。 
-  ```
-  ```
+    
   void Update ()
     {
         Debug.Log("Update time :" + Time.deltaTime);
     }
-    // 只要处于激活状态下的脚本，都会在每一帧里调用Update()函数，该函数也是最为常用的一个函数，用来更新逻辑。
-    //当MonoBehaviour启用时，其Update在每一帧被调用，约每0.016s刷新一次
+    /*只要处于激活状态下的脚本，都会在每一帧里调用Update()函数，该函数也是最为常用的一个函数，用来更新逻辑。
+    当MonoBehaviour启用时，其Update在每一帧被调用，约每0.016s刷新一次*/
  
   void FixedUpdate (){
         Debug.Log("FixedUpdate time :" + Time.deltaTime);
     }
     //该函数用于固定更新。在游戏运行的过程中，每一帧的处理时间是不固定的，当我们需要固定间隔时间执行某些代码时用到，固定0.02s刷新一次
-  ```
-  ```
+    
   void LateUpdate(){
              Debug.Log(this.name + "'s LateUpdate()");
      }
      //该函数是延迟更新函数，处于激活状态下的脚本在每一帧里都会在Update()函数执行后调用该函数，通常用来调整代码执行的顺序，约0.016s刷新一次
-  ```
+```     
   
   2.常用事件包括 OnGUI() OnDisable() OnEnable()
   
   答：
   
-  ```
-  void OnGUI(){
+```C#  
+   void OnGUI(){
 		Debug.Log("OnGUI time :" + Time.deltaTime);
 	}
   //刷新时间不固定，有时约0.02s，有时约0.12，有快有慢
-  ```
+  
+  void OnEnable()
+	{
+		Debug.Log("OnEnable");
+	}
+  //当场景启动完毕是函数运行
+ 
+	void OnDisable()
+	{
+		Debug.Log("OnDisable");
+	}
+  //当关闭场景启动时函数执行
+```  
+  
   
