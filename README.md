@@ -66,5 +66,146 @@
 	}
   //当关闭场景启动时函数执行
 ```  
+
+**查找脚本手册，了解 GameObject，Transform，Component 对象**
+
+1.分别翻译官方对三个对象的描述（Description）
+ 
+（1）GameObjects: GameObjects are the fundamental objects in Unity that represent characters, props and scenery.
+
+游戏对象是在 Unity 中代表任务，道具和场景的基础对象
+ 
+（2）Tranform: The Transform component determines the Position, Rotation, and Scale of each object in the scene.
+
+变化组件决定了场景中游戏对象的位置，大小和旋转关系。
+ 
+（3）Component: Components are the nuts & bolts of objects and behaviors in a game.
+
+组件是游戏对象和其对应行为之间的枢纽。
+
+ 
+2.描述下图中 table 对象（实体）的属性、table 的 Transform 的属性、 table 的部件
+ 
+![](https://xwy27.github.io/Unity-3d/%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/example.png)
+	
+   ①本题目要求是把可视化图形编程界面与 Unity API 对应起来，当你在 Inspector 面板上每一个内容，应该知道对应 API。例如：table 的对象是 GameObject，第一个选择框是 activeSelf 属性。
+   
+   答：table 对象(实体)的属性： layer（Default）和tag（Untagged）；table 的 Transform 的属性：Position: (0, 0, 0)，Rotation: (0, 0, 0)，Scale : (1, 1, 1)；table 的 部件：Transform，Mesh filter，Box Collider。
+   
+
+ 3.用 UML 图描述 三者的关系（请使用 UMLet 14.1.1 stand-alone版本出图）略
+ 
+ **整理相关学习资料，编写简单代码验证以下技术的实现：**
+ 
+ 1.查找对象：
+ 
+①通过对象名称（Find方法）
+
+②通过标签获取单个游戏对象（FindWithTag方法）
+
+③通过标签获取多个游戏对象（FindGameObjectsWithTags方法）
+
+④通过类型获取单个游戏对象（FindObjectOfType方法）
+
+⑤通过类型获取多个游戏对象（FindObjectsOfType方法）
+ 
+```C#
+var cubeF = GameObject.Find("/CubeFather");  
+if (null != cubeF)  
+{  
+    Debug.Log("find cube father~");  
+}  
+cubeF = GameObject.Find("CubeFather");  
+if (null != cubeF)  
+{  
+    Debug.Log("find cube father, no /~");  
+}  
   
-  
+var cubeS = GameObject.Find("/CubeFather/CubeSon");  
+if (null != cubeS)  
+{  
+    Debug.Log("find cube son~");  
+}  
+cubeS = GameObject.Find("CubeFather/CubeSon");  
+if (null != cubeS)  
+{  
+    Debug.Log("find cube son, no /~");  
+}  
+cubeS = GameObject.Find("CubeSon");  
+if (null != cubeS)  
+{  
+    Debug.Log("find cube son, no one /~");  
+}  
+```
+ 
+2.添加子对象:
+
+```C#
+GameObject.CreatePrimitive(PrimitiveType);
+```
+
+3.遍历对象树:
+
+```C#
+foreach (Transform child in transform)
+{
+    Debug.Log(child.gameObject.name);
+}
+```
+
+4.清除所有子对象:
+
+```C#
+foreach(Transform child in transform) {
+   Destroy(child.gameObject);
+}
+```
+ 
+**资源预设（Prefabs）与 对象克隆 (clone)**
+ 
+1.预设（Prefabs）有什么好处？预设与对象克隆 (clone or copy or Instantiate of Unity Object) 关系？
+ 
+答：预设是Unity中的一种特殊资源。一般来说预设就是一个或者一系列组件的集合体，你可以在创建了预设以后，对预设进行实例化。当预设发生改变是，这些更改将应用于所有与之链接的实例。所以预设省去大量的重做工作。
+ 
+对象克隆，就是直接新克隆了一个原有对象的实例，与源对象无太大联系。
+ 
+2.制作 table 预制，写一段代码将 table 预制资源实例化成游戏对象
+
+```C#
+public class NewBehaviourScript : MonoBehaviour {
+    private string prePath = "prefabs/table";
+    // Use this for initialization
+    void Start () {
+        GameObject Table =
+            Instantiate(Resource.Load(prePath), new Vector(4, 0, 0), Quaternion.identity) as GameObject;
+    }
+}
+```
+
+**尝试解释组合模式（Composite Pattern / 一种设计模式）。使用 BroadcastMessage() 方法向子对象发送消息**
+ 
+答：
+ 
+![](https://images2015.cnblogs.com/blog/974944/201703/974944-20170312003459311-1568701562.png)
+
+ 
+父类：
+
+```C#
+public class ParentBehaviourScript : MonoBehaviour {
+   // Use this for initialization
+   void Start () {
+       this.BroadcastMessage("Test");
+   }
+}
+```
+ 
+子类：
+
+```C#
+public class ChildBehaviourScript : MonoBehaviour {
+    void Test() {
+        Debug.Log("Child Received");
+    }
+}
+```
